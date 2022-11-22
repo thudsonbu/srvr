@@ -1,6 +1,6 @@
 # SRVR
 
-SRVR pretty close to the most simple http server you could write in go. The
+SRVR is pretty close to the most simple http server you could write in go. The
 point is to show the power of Go's interfaces in terms of decoupling. By
 explicitly specifying interfaces in the controller and business modules
 they become agnostic to the implementation of the logger which allows us to
