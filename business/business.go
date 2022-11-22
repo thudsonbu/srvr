@@ -6,37 +6,47 @@ type DataStore interface {
 	UserNameForID(userID string) (string, bool)
 }
 
+// Define an interface for the logger that our BusinessLogic will use. This
+// allows us to easily swap out the logger later.
 type Logger interface {
 	Log(message string)
 }
 
+// Create an adapter from the Logger to our Business logic
 type LoggerAdapter func(message string)
 
-func (l LoggerAdapter) Log(message string) {
-	l(message)
+func (logger LoggerAdapter) Log(message string) {
+	logger(message)
 }
 
 type BusinessLogic struct {
-	l  Logger
-	ds DataStore
+	logger Logger
+	store  DataStore
 }
 
-func (bl BusinessLogic) DoSomething() {
-	bl.l.Log("Doing something")
+func (businessLogic BusinessLogic) DoSomething() {
+	businessLogic.logger.Log("Doing something")
 }
 
-func (bl BusinessLogic) SayHello(userID string) (string, error) {
-	name, ok := bl.ds.UserNameForID(userID)
+func (businessLogic BusinessLogic) SayHello(userID string) (string, error) {
+	name, ok := businessLogic.store.UserNameForID(userID)
 	if !ok {
 		return "", errors.New("No user found")
 	}
 	return "Hello, " + name, nil
 }
 
-func (bl BusinessLogic) SayGoodbye(userID string) (string, error) {
-	name, ok := bl.ds.UserNameForID(userID)
+func (businessLogic BusinessLogic) SayGoodbye(userID string) (string, error) {
+	name, ok := businessLogic.store.UserNameForID(userID)
 	if !ok {
 		return "", errors.New("No user found")
 	}
 	return "Goodbye, " + name, nil
+}
+
+func NewBusinessLogic(logger Logger, store DataStore) BusinessLogic {
+	return BusinessLogic{
+		logger: logger,
+		store:  store,
+	}
 }
