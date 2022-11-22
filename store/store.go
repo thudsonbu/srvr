@@ -9,7 +9,7 @@ func (kvs KeyValStore) UserNameForID(userID string) (string, bool) {
 	return name, ok
 }
 
-func CreateKeyValStore() KeyValStore {
+func NewKeyValStore() KeyValStore {
 	return KeyValStore{
 		userData: map[string]string{
 			"1": "Alice",
